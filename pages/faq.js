@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
+import Icon from '../components/Icon'
 
 const AVATAR = '/logo.png'
 const FREE_API_KEY = 'cimytech##key'
@@ -22,7 +23,7 @@ const FAQS = [
   },
   {
     q: 'Gimana cara pake apikey?',
-    a: `Tambahin sebagai query parameter di setiap request, contoh:\nhttps://domain-lu.com/api/downloader/tiktok?url=...&apikey=${FREE_API_KEY}`,
+    a: `Tambahin sebagai query parameter di setiap request, contoh:\n{{ORIGIN}}/api/downloader/tiktok?url=...&apikey=${FREE_API_KEY}`,
   },
   {
     q: 'Kenapa request gue ditolak (429)?',
@@ -36,13 +37,15 @@ const FAQS = [
 
 function FaqItem({ item, index, open, onToggle }) {
   const isOpen = open === index
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://domain-lu.com'
+  const answer = item.a.replace('{{ORIGIN}}', origin)
   return (
     <div style={s.item}>
       <button style={s.itemHead} onClick={() => onToggle(index)}>
         <span style={s.itemQ}>{item.q}</span>
-        <span style={{ ...s.itemChevron, transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>▾</span>
+        <span style={{ ...s.itemChevron, transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}><Icon name="ChevronDown" size={15} /></span>
       </button>
-      {isOpen && <div style={s.itemBody}>{item.a}</div>}
+      {isOpen && <div style={s.itemBody}>{answer}</div>}
     </div>
   )
 }
@@ -73,8 +76,8 @@ export default function Faq() {
           <span style={s.navName}>Cirest Api</span>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button style={s.navBtn} onClick={() => router.push('/category')}>🗂️ Category</button>
-          <button style={s.navBtn} onClick={() => router.push('/docs')}>📖 Docs</button>
+          <button style={{ ...s.navBtn, display: 'inline-flex', alignItems: 'center', gap: 6 }} onClick={() => router.push('/category')}><Icon name="FolderOpen" size={13} /> Category</button>
+          <button style={{ ...s.navBtn, display: 'inline-flex', alignItems: 'center', gap: 6 }} onClick={() => router.push('/docs')}><Icon name="BookOpen" size={13} /> Docs</button>
         </div>
       </nav>
 
@@ -90,7 +93,7 @@ export default function Faq() {
             <div style={s.keyBannerLabel}>Apikey Gratis</div>
             <div style={s.keyBannerValue}>{FREE_API_KEY}</div>
           </div>
-          <button style={s.copyBtn} onClick={copyKey}>{copied ? '✓ Copied' : '⧉ Copy'}</button>
+          <button style={{ ...s.copyBtn, display: 'inline-flex', alignItems: 'center', gap: 5 }} onClick={copyKey}>{copied ? <><Icon name="Check" size={13} /> Copied</> : <><Icon name="Copy" size={13} /> Copy</>}</button>
         </div>
 
         <div style={s.faqList}>
@@ -102,10 +105,10 @@ export default function Faq() {
         <div style={s.ctaBox}>
           <div style={s.ctaTitle}>Butuh apikey tanpa limit?</div>
           <p style={s.ctaSub}>Chat langsung, nanti dibantu setup key premium buat project lu.</p>
-          <a href={WA_LINK} target="_blank" rel="noreferrer" style={s.waBtn}>💬 Chat WhatsApp</a>
+          <a href={WA_LINK} target="_blank" rel="noreferrer" style={{ ...s.waBtn, display: 'inline-flex', alignItems: 'center', gap: 6 }}><Icon name="MessageCircle" size={15} /> Chat WhatsApp</a>
         </div>
 
-        <footer style={s.footer}>© 2026 Cirest Api · Made with ☕ in Indonesia</footer>
+        <footer style={s.footer}>© 2026 Cirest Api · Made with <Icon name="Coffee" size={12} style={{ margin: '0 2px' }} /> in Indonesia</footer>
       </main>
     </>
   )

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import Icon from './Icon'
 
 const FREE_API_KEY = 'cimytech##key'
 // TODO: ganti dengan nomor WA lu, format 62xxx (tanpa +, tanpa spasi)
@@ -35,15 +36,15 @@ export default function ApiKeyPopup() {
   return (
     <div style={s.overlay} onClick={(e) => e.target === e.currentTarget && close()}>
       <div style={s.modal}>
-        <button style={s.closeBtn} onClick={close}>✕</button>
+        <button style={s.closeBtn} onClick={close}><Icon name="X" size={13} /></button>
 
-        <div style={s.iconWrap}>🔑</div>
+        <div style={s.iconWrap}><Icon name="KeyRound" size={22} /></div>
         <h2 style={s.title}>Apikey Gratis Buat Lu</h2>
         <p style={s.sub}>Semua endpoint butuh apikey. Pake yang gratis ini, limitnya 80 request/jam (2/detik).</p>
 
         <div style={s.keyBox}>
           <span style={s.keyText}>{FREE_API_KEY}</span>
-          <button style={s.copyBtn} onClick={copyKey}>{copied ? '✓ Copied' : '⧉ Copy'}</button>
+          <button style={{ ...s.copyBtn, display: 'inline-flex', alignItems: 'center', gap: 4 }} onClick={copyKey}>{copied ? <><Icon name="Check" size={12} /> Copied</> : <><Icon name="Copy" size={12} /> Copy</>}</button>
         </div>
 
         <div style={s.tierRow}>
@@ -61,8 +62,8 @@ export default function ApiKeyPopup() {
           </div>
         </div>
 
-        <a href={WA_LINK} target="_blank" rel="noreferrer" style={s.waBtn}>
-          💬 Mau Unlimited? Chat WA
+        <a href={WA_LINK} target="_blank" rel="noreferrer" style={{ ...s.waBtn, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+          <Icon name="MessageCircle" size={15} /> Mau Unlimited? Chat WA
         </a>
         <button style={s.dismissBtn} onClick={close}>Lanjut pake yang gratis</button>
       </div>
@@ -74,7 +75,7 @@ const s = {
   overlay: { position: 'fixed', inset: 0, zIndex: 300, background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16, fontFamily: 'Plus Jakarta Sans, sans-serif' },
   modal: { width: '100%', maxWidth: 380, background: '#121212', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 20, padding: '28px 24px 24px', position: 'relative', textAlign: 'center', animation: 'popIn 0.25s ease' },
   closeBtn: { position: 'absolute', top: 14, right: 14, width: 26, height: 26, borderRadius: '50%', background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.07)', color: '#9a9a9a', fontSize: 12, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' },
-  iconWrap: { width: 52, height: 52, margin: '0 auto 14px', borderRadius: 14, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24 },
+  iconWrap: { width: 52, height: 52, margin: '0 auto 14px', borderRadius: 14, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' },
   title: { fontSize: 19, fontWeight: 900, color: '#f0f6fc', marginBottom: 8, letterSpacing: -0.3 },
   sub: { fontSize: 12.5, color: '#9a9a9a', lineHeight: 1.6, marginBottom: 18, padding: '0 4px' },
   keyBox: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, background: '#0f0f0f', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10, padding: '10px 14px', marginBottom: 16 },

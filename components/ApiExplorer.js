@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import Icon from './Icon'
 
 export const AVATAR = '/logo.png'
 
@@ -54,7 +55,7 @@ export function EpCard({ ep, index, onClick }) {
           background: hovered ? 'linear-gradient(135deg, #ffffff, #e2e8f0)' : 'linear-gradient(135deg, #e5e5e5, #ffffff)',
           borderRadius: 8, padding: '6px 14px', fontSize: 12, fontWeight: 800, color: '#fff',
           fontFamily: 'JetBrains Mono, monospace', transition: 'background 0.2s',
-        }}>&lt;/&gt; {ep.method || 'GET'}</div>
+        }}><Icon name="Code2" size={12} /> {ep.method || 'GET'}</div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: ep.status === 'error' ? '#f87171' : '#10b981' }}>
           <div style={{ width: 8, height: 8, background: ep.status === 'error' ? '#f87171' : '#10b981', borderRadius: '50%', animation: ep.status === 'error' ? 'none' : 'blink 2s infinite' }} />
           {ep.status === 'error' ? 'Error' : 'Ready'}
@@ -118,13 +119,13 @@ export function EndpointModal({ ep, onClose }) {
             <div style={ms.modalTitle}>{ep.name}</div>
             <div style={ms.modalDesc}>{ep.desc}</div>
           </div>
-          <button style={ms.modalX} onClick={onClose}>✕</button>
+          <button style={ms.modalX} onClick={onClose}><Icon name="X" size={13} /></button>
         </div>
 
         <div style={ms.modalBody}>
           <div style={ms.epLabelRow}>
             <span style={ms.epLabelTxt}>Endpoint</span>
-            <button style={ms.copyBtn} onClick={copyUrl}>⧉</button>
+            <button style={ms.copyBtn} onClick={copyUrl}><Icon name="Copy" size={14} /></button>
           </div>
           <div style={ms.urlBox}>
             <div style={ms.urlText}>{getUrl()}</div>
@@ -132,7 +133,7 @@ export function EndpointModal({ ep, onClose }) {
           </div>
 
           <div style={ms.paramsBox}>
-            <div style={ms.paramsHead}>⚙️ Parameters</div>
+            <div style={{ ...ms.paramsHead, display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="Settings" size={14} /> Parameters</div>
 
             <div style={ms.paramBlock}>
               <div style={ms.paramRow}>
@@ -185,6 +186,8 @@ export function EndpointModal({ ep, onClose }) {
             ))}
           </div>
 
+          <StatusCodeTable />
+
           {loading && (
             <div style={ms.loadingArea}>
               <div style={ms.spinner} />
@@ -196,13 +199,13 @@ export function EndpointModal({ ep, onClose }) {
             response.isImage ? (
               <div style={ms.imgRespBox}>
                 <img src={response.blobUrl} style={ms.imgPreview} alt="result" />
-                <button style={ms.dlBtn} onClick={downloadImage}>⬇ Download</button>
+                <button style={{ ...ms.dlBtn, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }} onClick={downloadImage}><Icon name="Download" size={14} /> Download</button>
               </div>
             ) : (
               <div style={ms.respWrap}>
                 <div style={ms.respHead}>
                   <span style={ms.respLabel}>Response</span>
-                  <button style={ms.respCopyBtn} onClick={() => navigator.clipboard.writeText(JSON.stringify(response.data, null, 2))}>⧉ Copy</button>
+                  <button style={{ ...ms.respCopyBtn, display: 'inline-flex', alignItems: 'center', gap: 4 }} onClick={() => navigator.clipboard.writeText(JSON.stringify(response.data, null, 2))}><Icon name="Copy" size={11} /> Copy</button>
                 </div>
                 <div style={{ ...ms.respBox, color: response.ok ? '#ffffff' : '#f87171' }}>
                   {JSON.stringify(response.data, null, 2)}
@@ -214,9 +217,34 @@ export function EndpointModal({ ep, onClose }) {
 
         <div style={ms.modalFoot}>
           <button style={{ ...ms.sendBtn, ...(loading ? { opacity: 0.7, cursor: 'not-allowed' } : {}) }} onClick={sendRequest} disabled={loading}>
-            {loading ? '↺ Processing...' : '↺ Send Request'}
+            loading ? <><Icon name="RefreshCw" size={14} style={{ animation: 'spin 1s linear infinite' }} /> Processing...</> : <><Icon name="RefreshCw" size={14} /> Send Request</>
           </button>
         </div>
+      </div>
+    </div>
+  )
+}
+
+const STATUS_CODES = [
+  { code: 200, icon: 'CheckCircle2', color: '#4ade80', desc: 'OK — Request berhasil' },
+  { code: 400, icon: 'AlertCircle', color: '#f87171', desc: 'Bad Request — Parameter tidak valid atau kurang' },
+  { code: 405, icon: 'AlertCircle', color: '#f87171', desc: 'Method Not Allowed — HTTP method tidak didukung' },
+  { code: 429, icon: 'AlertTriangle', color: '#facc15', desc: 'Too Many Requests — Rate limit tercapai' },
+  { code: 500, icon: 'AlertCircle', color: '#f87171', desc: 'Internal Server Error — Server mengalami error' },
+]
+
+export function StatusCodeTable() {
+  return (
+    <div style={ms.statusBox}>
+      <div style={ms.statusHead}><Icon name="List" size={14} /> HTTP Status Codes</div>
+      <div style={ms.statusTable}>
+        {STATUS_CODES.map(s => (
+          <div key={s.code} style={ms.statusRow}>
+            <Icon name={s.icon} size={16} color={s.color} />
+            <span style={{ ...ms.statusCode, color: s.color }}>{s.code}</span>
+            <span style={ms.statusDesc}>{s.desc}</span>
+          </div>
+        ))}
       </div>
     </div>
   )
@@ -257,4 +285,10 @@ export const ms = {
   imgRespBox: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, marginTop: 4 },
   imgPreview: { width: '100%', maxHeight: 280, objectFit: 'contain', borderRadius: 10, border: '1px solid rgba(255,255,255,0.08)', background: 'repeating-conic-gradient(#141414 0% 25%, #0f0f0f 0% 50%) 0 0 / 16px 16px' },
   dlBtn: { width: '100%', padding: '10px', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.25)', borderRadius: 9, fontSize: 13, fontWeight: 700, color: '#ffffff', cursor: 'pointer' },
+  statusBox: { marginTop: 16, background: '#0f0f0f', borderRadius: 12, padding: '14px 16px', border: '1px solid rgba(255,255,255,0.06)' },
+  statusHead: { display: 'flex', alignItems: 'center', gap: 6, fontSize: 12.5, fontWeight: 800, color: '#c8d3e0', marginBottom: 10, textTransform: 'uppercase', letterSpacing: 0.4 },
+  statusTable: { display: 'flex', flexDirection: 'column', gap: 8 },
+  statusRow: { display: 'flex', alignItems: 'center', gap: 10 },
+  statusCode: { fontFamily: 'JetBrains Mono, monospace', fontSize: 12.5, fontWeight: 800, minWidth: 30, flexShrink: 0 },
+  statusDesc: { fontSize: 11.5, color: '#9a9a9a', lineHeight: 1.4 },
 }

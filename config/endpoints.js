@@ -25,6 +25,19 @@ const endpoints = [
       { key: 'url', desc: 'URL video YouTube', placeholder: 'https://youtu.be/xxx' }
     ],
   },
+
+  // ─── HASTAG ───
+  {
+    category: 'Hastag',
+    name: 'TikTok Hashtag Info',
+    status: 'ready',
+    desc: 'Info lengkap hashtag TikTok — total video, total views, dan detail challenge.',
+    path: '/api/hastag/tiktok',
+    method: 'GET',
+    params: [
+      { key: 'tag', desc: 'Nama hashtag (tanpa #)', placeholder: 'fyp' }
+    ],
+  },
 // ─── TOOLS ───
   {
     category: 'Tools',

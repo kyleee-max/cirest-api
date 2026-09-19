@@ -25,6 +25,19 @@ a { text-decoration: none; color: inherit; }
 button { font-family: inherit; cursor: pointer; }
 input, textarea { font-family: inherit; }
 
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button, a, input, textarea, [role="button"] {
+  outline: none;
+}
+
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 2px solid rgba(255,255,255,0.4);
+  outline-offset: 2px;
+}
+
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: #ffffff26; border-radius: 3px; }

@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import endpoints from '../../config/endpoints'
 import { getCategoryMeta } from '../../lib/categoryMeta'
 import { AVATAR, Particles, useScrollReveal } from '../../components/ApiExplorer'
+import Icon from '../../components/Icon'
 
 function slugify(name) {
   return name.toLowerCase().trim().replace(/\s+/g, '-')
@@ -49,7 +50,7 @@ function CategoryCard({ cat, index }) {
           width: 44, height: 44, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: 22, background: hovered ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.08)',
           border: '1px solid rgba(255,255,255,0.15)', transition: 'background 0.2s',
-        }}>{cat.icon}</div>
+        }}><Icon name={cat.icon} size={22} /></div>
         <div style={{
           fontSize: 11, fontWeight: 800, color: '#8b949e', fontFamily: 'JetBrains Mono, monospace',
           background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
@@ -61,7 +62,7 @@ function CategoryCard({ cat, index }) {
         <div style={{ fontSize: 12.5, color: '#8b949e', lineHeight: 1.55 }}>{cat.desc}</div>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, fontWeight: 700, color: hovered ? '#ffffff' : '#484f58', transition: 'color 0.2s' }}>
-        Explore <span style={{ transform: hovered ? 'translateX(3px)' : 'translateX(0)', transition: 'transform 0.2s', display: 'inline-block' }}>→</span>
+        Explore <span style={{ transform: hovered ? 'translateX(3px)' : 'translateX(0)', transition: 'transform 0.2s', display: 'inline-flex' }}><Icon name="ArrowRight" size={13} /></span>
       </div>
     </div>
   )
@@ -95,8 +96,8 @@ export default function CategoryIndex() {
           <span style={s.navName}>Cirest Api</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <Link href="/faq" style={s.navDocsBtn}>❓ FAQ</Link>
-          <Link href="/docs" style={s.navDocsBtn}>📖 Docs</Link>
+          <Link href="/faq" style={{ ...s.navDocsBtn, display: 'inline-flex', alignItems: 'center', gap: 6 }}><Icon name="HelpCircle" size={14} color="#0d1117" /> FAQ</Link>
+          <Link href="/docs" style={{ ...s.navDocsBtn, display: 'inline-flex', alignItems: 'center', gap: 6 }}><Icon name="BookOpen" size={14} color="#0d1117" /> Docs</Link>
         </div>
       </nav>
 
@@ -113,7 +114,7 @@ export default function CategoryIndex() {
           ))}
         </div>
 
-        <footer style={s.footer}>© 2026 Cirest Api · Made with ☕ in Indonesia</footer>
+        <footer style={s.footer}>© 2026 Cirest Api · Made with <Icon name="Coffee" size={12} style={{ margin: '0 2px' }} /> in Indonesia</footer>
       </main>
 
       <style>{`

@@ -2,6 +2,8 @@ import Head from 'next/head'
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
 import endpoints from '../config/endpoints'
+import Icon from '../components/Icon'
+import { StatusCodeTable } from '../components/ApiExplorer'
 
 const AVATAR = '/logo.png'
 const VIDEO_URL = 'https://raw.githubusercontent.com/kyleee-max/codebase/main/assets/cirest.mp4'
@@ -61,7 +63,7 @@ function EpCard({ ep, index, onClick }) {
           background: hovered ? 'linear-gradient(135deg, #ffffff, #e2e8f0)' : 'linear-gradient(135deg, #e5e5e5, #ffffff)',
           borderRadius: 8, padding: '6px 14px', fontSize: 12, fontWeight: 800, color: '#fff',
           fontFamily: 'JetBrains Mono, monospace', transition: 'background 0.2s',
-        }}>&lt;/&gt; GET</div>
+        }}><Icon name="Code2" size={12} /> GET</div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: ep.status === 'error' ? '#f87171' : '#10b981' }}>
           <div style={{ width: 8, height: 8, background: ep.status === 'error' ? '#f87171' : '#10b981', borderRadius: '50%', animation: ep.status === 'error' ? 'none' : 'blink 2s infinite' }} />
           {ep.status === 'error' ? 'Error' : 'Ready'}
@@ -161,13 +163,13 @@ export default function Docs() {
           <img src={AVATAR} style={s.navAvatar} alt="Cirest Api" />
         </div>
         <div style={s.navSearch}>
-          <span style={s.searchIcon}>🔍</span>
+          <span style={s.searchIcon}><Icon name="Search" size={14} /></span>
           <input style={s.searchInput} placeholder="Search API..." value={search} onChange={e => setSearch(e.target.value)} />
         </div>
-        <button style={s.catLink} onClick={() => router.push('/category')}>🗂️</button>
-        <button style={s.catLink} onClick={() => router.push('/faq')}>❓</button>
+        <button style={s.catLink} onClick={() => router.push('/category')}><Icon name="FolderOpen" size={15} /></button>
+        <button style={s.catLink} onClick={() => router.push('/faq')}><Icon name="HelpCircle" size={15} /></button>
         <div style={s.navNotif}>
-          🔔
+          <Icon name="Bell" size={15} />
           <div style={s.notifDot} />
         </div>
       </nav>
@@ -215,13 +217,13 @@ export default function Docs() {
                 <div style={s.modalTitle}>{modal.name}</div>
                 <div style={s.modalDesc}>{modal.desc}</div>
               </div>
-              <button style={s.modalX} onClick={closeModal}>✕</button>
+              <button style={s.modalX} onClick={closeModal}><Icon name="X" size={13} /></button>
             </div>
 
             <div style={s.modalBody}>
               <div style={s.epLabelRow}>
                 <span style={s.epLabelTxt}>Endpoint</span>
-                <button style={s.copyBtn} onClick={copyUrl}>⧉</button>
+                <button style={s.copyBtn} onClick={copyUrl}><Icon name="Copy" size={14} /></button>
               </div>
               <div style={s.urlBox}>
                 <div style={s.urlText}>{getUrl()}</div>
@@ -229,7 +231,7 @@ export default function Docs() {
               </div>
 
               <div style={s.paramsBox}>
-                <div style={s.paramsHead}>⚙️ Parameters</div>
+                <div style={{ ...s.paramsHead, display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="Settings" size={14} /> Parameters</div>
 
                 <div style={s.paramBlock}>
                   <div style={s.paramRow}>
@@ -282,6 +284,8 @@ export default function Docs() {
                 ))}
               </div>
 
+              <StatusCodeTable />
+
               {loading && (
                 <div style={s.loadingArea}>
                   <div style={s.spinner} />
@@ -293,13 +297,13 @@ export default function Docs() {
                 response.isImage ? (
                   <div style={s.imgRespBox}>
                     <img src={response.blobUrl} style={s.imgPreview} alt="result" />
-                    <button style={s.dlBtn} onClick={downloadImage}>⬇ Download</button>
+                    <button style={{ ...s.dlBtn, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }} onClick={downloadImage}><Icon name="Download" size={14} /> Download</button>
                   </div>
                 ) : (
                   <div style={s.respWrap}>
                     <div style={s.respHead}>
                       <span style={s.respLabel}>Response</span>
-                      <button style={s.respCopyBtn} onClick={() => navigator.clipboard.writeText(JSON.stringify(response.data, null, 2))}>⧉ Copy</button>
+                      <button style={{ ...s.respCopyBtn, display: 'inline-flex', alignItems: 'center', gap: 4 }} onClick={() => navigator.clipboard.writeText(JSON.stringify(response.data, null, 2))}><Icon name="Copy" size={11} /> Copy</button>
                     </div>
                     <div style={{...s.respBox, color: response.ok ? '#ffffff' : '#f87171'}}>
                       {JSON.stringify(response.data, null, 2)}
@@ -311,7 +315,7 @@ export default function Docs() {
 
             <div style={s.modalFoot}>
               <button style={{...s.sendBtn, ...(loading ? { opacity: 0.7, cursor: 'not-allowed' } : {})}} onClick={sendRequest} disabled={loading}>
-                {loading ? '↺ Processing...' : '↺ Send Request'}
+                loading ? <><Icon name="RefreshCw" size={14} style={{ animation: 'spin 1s linear infinite' }} /> Processing...</> : <><Icon name="RefreshCw" size={14} /> Send Request</>
               </button>
             </div>
           </div>

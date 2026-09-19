@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import endpoints from '../../config/endpoints'
 import { getCategoryMeta } from '../../lib/categoryMeta'
 import { AVATAR, Particles, EpCard, EndpointModal } from '../../components/ApiExplorer'
+import Icon from '../../components/Icon'
 
 function slugify(name) {
   return name.toLowerCase().trim().replace(/\s+/g, '-')
@@ -43,12 +44,12 @@ export default function CategoryDetail({ category, eps }) {
         <div style={s.navLogo} onClick={() => router.push('/')}>
           <img src={AVATAR} style={s.navAvatar} alt="Cirest Api" />
         </div>
-        <button style={s.backBtn} onClick={() => router.push('/category')}>← All Categories</button>
+        <button style={{ ...s.backBtn, display: 'inline-flex', alignItems: 'center', gap: 6 }} onClick={() => router.push('/category')}><Icon name="ArrowLeft" size={14} /> All Categories</button>
       </nav>
 
       <main style={s.main}>
         <div style={s.header}>
-          <div style={s.iconWrap}>{meta.icon}</div>
+          <div style={s.iconWrap}><Icon name={meta.icon} size={26} /></div>
           <h1 style={s.title}>{category}</h1>
           <p style={s.sub}>{meta.desc}</p>
           <div style={s.countBadge}>{eps.length} endpoints</div>
@@ -60,7 +61,7 @@ export default function CategoryDetail({ category, eps }) {
           ))}
         </div>
 
-        <footer style={s.footer}>© 2026 Cirest Api · Made with ☕ in Indonesia</footer>
+        <footer style={s.footer}>© 2026 Cirest Api · Made with <Icon name="Coffee" size={12} style={{ margin: '0 2px' }} /> in Indonesia</footer>
       </main>
 
       <EndpointModal ep={modal} onClose={() => setModal(null)} />

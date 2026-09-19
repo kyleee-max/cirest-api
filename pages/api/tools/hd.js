@@ -30,7 +30,7 @@ export default async function handler(req, res) {
     formUp.append('v', 'web.0')
     formUp.append('file', imgBuffer, { filename: 'image.jpg', contentType })
 
-    const resUp = await axios.post('https://api30g.iloveimg.com/v1/upload', formUp, {
+    const resUp = await axios.post('https://api29g.iloveimg.com/v1/upload', formUp, {
       headers: {
         ...formUp.getHeaders(),
         'Authorization': `Bearer ${token}`,
@@ -46,7 +46,7 @@ export default async function handler(req, res) {
     formDo.append('server_filename', serverFilename)
     formDo.append('scale', scale)
 
-    const resDone = await axios.post('https://api30g.iloveimg.com/v1/upscale', formDo, {
+    const resDone = await axios.post('https://api29g.iloveimg.com/v1/upscale', formDo, {
       headers: {
         ...formDo.getHeaders(),
         'Authorization': `Bearer ${token}`,

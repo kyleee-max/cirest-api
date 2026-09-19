@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import { useState, useEffect, useRef } from 'react'
+import Icon from '../components/Icon'
 
 const AVATAR = '/logo.png'
 
@@ -66,7 +67,7 @@ function LoginPage({ onLogin }) {
           {err && <div style={{ color: '#f87171', fontSize: 12, marginTop: 8 }}>{err}</div>}
           <button onClick={submit} disabled={loading}
             style={{ width: '100%', marginTop: 16, padding: '13px', background: 'linear-gradient(135deg, #e5e5e5, #a3a3a3)', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 700, color: '#fff', cursor: 'pointer' }}>
-            {loading ? 'Checking...' : '🔐 Login'}
+            loading ? 'Checking...' : <><Icon name="Lock" size={14} /> Login</>
           </button>
         </div>
       </div>
@@ -115,7 +116,7 @@ function EditorPanel({ file, onSaved }) {
     setSaving(true)
     const res = await api('save', { method: 'POST', body: JSON.stringify({ file, content }) })
     setSaving(false)
-    if (res.ok) { setToast({ ok: true, msg: '✓ Saved!' }); onSaved() } else setToast({ ok: false, msg: '✗ Gagal save' })
+    if (res.ok) { setToast({ ok: true, msg: 'Saved!' }); onSaved() } else setToast({ ok: false, msg: 'Gagal save' })
     setTimeout(() => setToast(null), 2500)
   }
   if (!file) return (
@@ -126,10 +127,10 @@ function EditorPanel({ file, onSaved }) {
       <div style={{ padding: '10px 16px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
         <span style={{ fontSize: 12, color: '#8b949e', fontFamily: 'JetBrains Mono, monospace' }}>{file}</span>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          {toast && <span style={{ fontSize: 12, color: toast.ok ? '#4ade80' : '#f87171' }}>{toast.msg}</span>}
+          {toast && <span style={{ fontSize: 12, color: toast.ok ? '#4ade80' : '#f87171', display: 'inline-flex', alignItems: 'center', gap: 4 }}><Icon name={toast.ok ? 'Check' : 'XCircle'} size={13} /> {toast.msg}</span>}
           <button onClick={save} disabled={saving}
             style={{ padding: '7px 18px', background: 'linear-gradient(135deg, #e5e5e5, #a3a3a3)', border: 'none', borderRadius: 8, fontSize: 12, fontWeight: 700, color: '#fff', cursor: 'pointer' }}>
-            {saving ? 'Saving...' : '💾 Save'}
+            saving ? 'Saving...' : <><Icon name="Save" size={14} /> Save</>
           </button>
         </div>
       </div>
@@ -195,11 +196,11 @@ function Dashboard({ onLogout }) {
         <img src={AVATAR} style={{ width: 28, height: 28, borderRadius: '50%', border: '2px solid rgba(255,255,255,0.2)' }} />
         <span style={{ fontSize: 14, fontWeight: 800, color: '#f0f6fc' }}>Cirest Api <span style={{ color: '#e5e5e5' }}>Admin</span></span>
         <div style={{ flex: 1 }} />
-        <button onClick={() => runAction('build', 'Build')} style={btnStyle('#1e3a4a', '#e5e5e5')}>🔨 Build</button>
-        <button onClick={() => runAction('stop', 'Stop')} style={btnStyle('#3a1e1e', '#f87171')}>⏹ Stop</button>
+        <button onClick={() => runAction('build', 'Build')} style={{...btnStyle('#1e3a4a', '#e5e5e5'), display:'inline-flex', alignItems:'center', gap:6}}><Icon name="Hammer" size={13} /> Build</button>
+        <button onClick={() => runAction('stop', 'Stop')} style={{...btnStyle('#3a1e1e', '#f87171'), display:'inline-flex', alignItems:'center', gap:6}}><Icon name="Square" size={12} /> Stop</button>
         <button onClick={() => runAction('start', 'Start')} style={btnStyle('#1e3a1e', '#4ade80')}>▶ Start</button>
-        <button onClick={backup} style={btnStyle('#2a1e3a', '#c084fc')}>📦 Backup</button>
-        <button onClick={onLogout} style={btnStyle('#1e1e2a', '#8b949e')}>🚪 Logout</button>
+        <button onClick={backup} style={{...btnStyle('#2a1e3a', '#c084fc'), display:'inline-flex', alignItems:'center', gap:6}}><Icon name="Package" size={13} /> Backup</button>
+        <button onClick={onLogout} style={{...btnStyle('#1e1e2a', '#8b949e'), display:'inline-flex', alignItems:'center', gap:6}}><Icon name="LogOut" size={13} /> Logout</button>
       </nav>
       {output && (
         <div style={{ background: '#0f0f0f', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '8px 16px', fontSize: 11, color: outputLoading ? '#e5e5e5' : '#4ade80', fontFamily: 'JetBrains Mono, monospace', maxHeight: 80, overflowY: 'auto', whiteSpace: 'pre-wrap' }}>
@@ -207,10 +208,10 @@ function Dashboard({ onLogout }) {
         </div>
       )}
       <div style={{ display: 'flex', borderBottom: '1px solid rgba(255,255,255,0.06)', background: '#121212', flexShrink: 0 }}>
-        {[{ key: 'editor', label: '📝 Editor' }, { key: 'logs', label: '📋 Logs' }].map(t => (
+        {[{ key: 'editor', label: 'Editor', icon: 'Pencil' }, { key: 'logs', label: 'Logs', icon: 'Clipboard' }].map(t => (
           <button key={t.key} onClick={() => setTab(t.key)}
-            style={{ padding: '10px 18px', background: 'none', border: 'none', borderBottom: tab === t.key ? '2px solid #e5e5e5' : '2px solid transparent', color: tab === t.key ? '#e5e5e5' : '#8b949e', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
-            {t.label}
+            style={{ padding: '10px 18px', background: 'none', border: 'none', borderBottom: tab === t.key ? '2px solid #e5e5e5' : '2px solid transparent', color: tab === t.key ? '#e5e5e5' : '#8b949e', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <Icon name={t.icon} size={13} /> {t.label}
           </button>
         ))}
       </div>

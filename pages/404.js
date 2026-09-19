@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
+import Icon from '../components/Icon'
 
 export default function Custom404() {
   const router = useRouter()
@@ -87,8 +88,8 @@ export default function Custom404() {
             404
           </div>
 
-          {/* Emoji */}
-          <div style={{ fontSize: '40px', marginBottom: '20px' }}>🔍</div>
+          {/* Icon */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}><Icon name="Search" size={40} color="#9a9a9a" strokeWidth={1.5} /></div>
 
           <h1 style={{
             fontSize: '22px',
@@ -139,11 +140,12 @@ export default function Custom404() {
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
                 cursor: 'pointer',
                 transition: 'opacity 0.2s',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
               }}
-              onMouseEnter={e => e.target.style.opacity = '0.85'}
-              onMouseLeave={e => e.target.style.opacity = '1'}
+              onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
+              onMouseLeave={e => e.currentTarget.style.opacity = '1'}
             >
-              ← Ke Home
+              <Icon name="ArrowLeft" size={14} /> Ke Home
             </button>
             <button
               onClick={() => router.push('/docs')}
@@ -159,11 +161,12 @@ export default function Custom404() {
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
                 cursor: 'pointer',
                 transition: 'border-color 0.2s',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
               }}
-              onMouseEnter={e => e.target.style.borderColor = 'rgba(255,255,255,0.5)'}
-              onMouseLeave={e => e.target.style.borderColor = 'rgba(255,255,255,0.15)'}
+              onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.5)'}
+              onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'}
             >
-              Lihat Docs →
+              Lihat Docs <Icon name="ArrowRight" size={14} />
             </button>
           </div>
         </div>
@@ -176,7 +179,7 @@ export default function Custom404() {
           position: 'relative',
           zIndex: 1,
         }}>
-          © 2026 Cirest Api · Made with ☕ in Indonesia
+          © 2026 Cirest Api · Made with <Icon name="Coffee" size={12} style={{ margin: '0 2px' }} /> in Indonesia
         </p>
       </div>
     </>

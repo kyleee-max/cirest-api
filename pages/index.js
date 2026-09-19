@@ -1,9 +1,10 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState, useEffect, useRef } from 'react'
+import Icon from '../components/Icon'
 
 const AVATAR = '/logo.png'
-const WA_CHANNEL = 'https://whatsapp.com/channel/0029Vb7lbO7Bvvsiv17r9Q47'
+const WA_CHANNEL = 'https://whatsapp.com/channel/0029Vb7oqii3AzNQIpO63y2q'
 
 function RevealDiv({ children, delay = 0, style = {} }) {
   const ref = useRef(null)
@@ -49,10 +50,10 @@ export default function Home() {
   }, [])
 
   const navItems = [
-    { label: '🏠 Home', path: '/' },
-    { label: '🗂️ Category', path: '/category' },
-    { label: '📖 Docs', path: '/docs' },
-    { label: '❓ FAQ', path: '/faq' },
+    { icon: 'Home', label: 'Home', path: '/' },
+    { icon: 'FolderOpen', label: 'Category', path: '/category' },
+    { icon: 'BookOpen', label: 'Docs', path: '/docs' },
+    { icon: 'HelpCircle', label: 'FAQ', path: '/faq' },
   ]
 
   return (
@@ -77,7 +78,7 @@ export default function Home() {
           <span style={s.navName}>Cirest Api</span>
         </div>
         <div style={{display:'flex', alignItems:'center', gap:10}}>
-          <button style={s.navDocsBtn} onClick={() => router.push('/docs')}>📖 Docs</button>
+          <button style={{ ...s.navDocsBtn, display: 'inline-flex', alignItems: 'center', gap: 6 }} onClick={() => router.push('/docs')}><Icon name="BookOpen" size={14} color="#0d1117" /> Docs</button>
           <div style={s.menuWrap} ref={menuRef}>
             <button style={s.navMenu} onClick={() => setMenuOpen(!menuOpen)}>
               <span style={{...s.menuLine, ...(menuOpen ? s.menuLine1Open : {})}} />
@@ -88,9 +89,9 @@ export default function Home() {
               <div style={s.dropdown}>
                 <div style={s.dropdownArrow} />
                 {navItems.map((item, i) => (
-                  <button key={i} style={{...s.dropdownItem, ...(i < navItems.length - 1 ? s.dropdownItemBorder : {})}}
+                  <button key={i} style={{...s.dropdownItem, ...(i < navItems.length - 1 ? s.dropdownItemBorder : {}), display: 'flex', alignItems: 'center', gap: 8}}
                     onClick={() => { router.push(item.path); setMenuOpen(false) }}>
-                    {item.label}
+                    <Icon name={item.icon} size={14} /> {item.label}
                   </button>
                 ))}
               </div>
@@ -111,10 +112,10 @@ export default function Home() {
             <span style={s.titleGrad}>Cirest Api</span>
           </h1>
           <p style={{ ...s.heroDesc, opacity: heroVisible ? 1 : 0, transform: heroVisible ? 'translateY(0)' : 'translateY(20px)', transition: 'all 0.5s ease 0.4s' }}>
-            Powerful, scalable, dan developer-friendly REST API platform. Build aplikasi keren dengan puluhan endpoint siap pakai. Gratis, tanpa login, tanpa API key.
+            Powerful, scalable, dan developer-friendly REST API platform. Build aplikasi keren dengan puluhan endpoint siap pakai. Cukup pake apikey gratis, tanpa perlu daftar.
           </p>
           <div style={{ ...s.btnGroup, opacity: heroVisible ? 1 : 0, transform: heroVisible ? 'translateY(0)' : 'translateY(20px)', transition: 'all 0.5s ease 0.5s' }}>
-            <button style={s.btnMain} onClick={() => router.push('/docs')}>📖 View Documentation</button>
+            <button style={{ ...s.btnMain, display: 'inline-flex', alignItems: 'center', gap: 8 }} onClick={() => router.push('/docs')}><Icon name="BookOpen" size={15} /> View Documentation</button>
           </div>
         </section>
 
@@ -123,10 +124,10 @@ export default function Home() {
           <RevealDiv delay={0}><h2 style={s.whyTitle}>Why Choose Cirest Api?</h2></RevealDiv>
           <div style={s.whyList}>
             {[
-              { icon: '⚡', title: 'Fast & Reliable', desc: 'Response cepat dengan uptime 99.9%. Server di-optimize buat developer Indonesia.' },
-              { icon: '🆓', title: 'Gratis Selamanya', desc: 'Tidak perlu daftar atau API key. Langsung pakai, semua endpoint tersedia gratis.' },
-              { icon: '📦', title: 'Banyak Endpoint', desc: 'Downloader, stalker, tools AI, dan sticker generator dalam satu platform.' },
-              { icon: '💬', title: 'Support via WA', desc: 'Ada masalah? Langsung chat support via WhatsApp. Respons cepat!' },
+              { icon: 'Zap', title: 'Fast & Reliable', desc: 'Response cepat dengan uptime 99.9%. Server di-optimize buat developer Indonesia.' },
+              { icon: 'KeyRound', title: 'Apikey Gratis', desc: 'Tidak perlu daftar akun. Pake apikey gratis publik, langsung bisa akses semua endpoint.' },
+              { icon: 'Package', title: 'Banyak Endpoint', desc: 'Downloader, stalker, tools AI, dan sticker generator dalam satu platform.' },
+              { icon: 'MessageCircle', title: 'Support via WA', desc: 'Ada masalah? Langsung chat support via WhatsApp. Respons cepat!' },
             ].map((item, i) => (
               <RevealDiv key={i} delay={i * 0.08}>
                 <WhyCard item={item} />
@@ -151,19 +152,19 @@ export default function Home() {
           ))}
         </div>
 
-        <footer style={s.footer}>© 2026 Cirest Api · Made with ☕ in Indonesia</footer>
+        <footer style={s.footer}>© 2026 Cirest Api · Made with <Icon name="Coffee" size={12} style={{ margin: '0 2px' }} /> in Indonesia</footer>
       </main>
 
       {/* POPUP WA CHANNEL */}
       {showWaPopup && (
         <div style={s.overlay} onClick={() => setShowWaPopup(false)}>
           <div style={s.waPopup} onClick={e => e.stopPropagation()}>
-            <button style={s.popupClose} onClick={() => setShowWaPopup(false)}>✕</button>
-            <div style={s.popupIcon}>📢</div>
+            <button style={s.popupClose} onClick={() => setShowWaPopup(false)}><Icon name="X" size={13} /></button>
+            <div style={s.popupIcon}><Icon name="Megaphone" size={32} /></div>
             <div style={s.popupTitle}>Ikuti Channel Update</div>
             <div style={s.popupDesc}>Dapetin notifikasi endpoint baru, update fitur, dan info maintenance langsung di WhatsApp kamu.</div>
-            <a href={WA_CHANNEL} target="_blank" rel="noreferrer" style={s.popupBtn}>
-              📲 Ikuti Sekarang
+            <a href={WA_CHANNEL} target="_blank" rel="noreferrer" style={{ ...s.popupBtn, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+              <Icon name="Smartphone" size={14} /> Ikuti Sekarang
             </a>
             <button style={s.popupSkip} onClick={() => setShowWaPopup(false)}>Nanti aja</button>
           </div>
@@ -185,7 +186,7 @@ function WhyCard({ item }) {
   return (
     <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
       style={{ background: hovered ? '#1c1c1e' : '#121212', border: hovered ? '1px solid rgba(255,255,255,0.25)' : '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: '16px 18px', display: 'flex', alignItems: 'flex-start', gap: 14, transition: 'all 0.2s', boxShadow: hovered ? '0 6px 20px rgba(255,255,255,0.07)' : 'none' }}>
-      <div style={{ width: 42, height: 42, flexShrink: 0, background: hovered ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, transition: 'all 0.2s' }}>{item.icon}</div>
+      <div style={{ width: 42, height: 42, flexShrink: 0, background: hovered ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }}><Icon name={item.icon} size={19} /></div>
       <div>
         <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 3 }}>{item.title}</div>
         <div style={{ fontSize: 12, color: '#8b949e', lineHeight: 1.5 }}>{item.desc}</div>
@@ -237,7 +238,7 @@ const s = {
   overlay: { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(6px)', zIndex: 999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 },
   waPopup: { background: '#121212', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 20, padding: '32px 24px', maxWidth: 340, width: '100%', textAlign: 'center', position: 'relative', animation: 'popupIn 0.3s ease', fontFamily: 'Plus Jakarta Sans, sans-serif' },
   popupClose: { position: 'absolute', top: 14, right: 14, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, width: 30, height: 30, color: '#8b949e', fontSize: 13, cursor: 'pointer' },
-  popupIcon: { fontSize: 36, marginBottom: 12 },
+  popupIcon: { display: 'flex', justifyContent: 'center', marginBottom: 12 },
   popupTitle: { fontSize: 18, fontWeight: 800, color: '#f0f6fc', marginBottom: 8 },
   popupDesc: { fontSize: 13, color: '#8b949e', lineHeight: 1.6, marginBottom: 20 },
   popupBtn: { display: 'block', width: '100%', padding: '13px', background: 'linear-gradient(135deg, #ffffff, #e2e8f0)', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, color: '#0a0a0a', cursor: 'pointer', textDecoration: 'none', marginBottom: 10, boxShadow: '0 4px 14px rgba(255,255,255,0.2)' },
