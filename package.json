@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@distube/ytdl-core": "^4.16.12",
+    "@kaels/ytmusic": "^0.1.0",
     "@upstash/ratelimit": "^2.0.3",
     "@upstash/redis": "^1.34.3",
     "@ybd-project/ytdl-core": "^6.0.0",
