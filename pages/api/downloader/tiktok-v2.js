@@ -139,7 +139,24 @@ export default async function handler(req, res) {
     return res.status(200).json({
       success: true,
       creator: 'KaelTzy',
-      data,
+      data: {
+        id: data.data?.id,
+        type: data.data?.type,
+        title: data.data?.title,
+        thumbnail: data.data?.thumbnail,
+        downloadUrl: data.data?.downloadUrl,
+        author: {
+          name: data.data?.author?.name,
+          username: data.data?.author?.username,
+          avatar: data.data?.author?.avatar,
+        },
+        stats: {
+          playCount: data.data?.stats?.playCount,
+          commentCount: data.data?.stats?.commentCount,
+          shareCount: data.data?.stats?.shareCount,
+        },
+        videoDuration: data.data?.videoDuration,
+      },
     });
   } catch (error) {
     console.error('TikTok Downloader V2:', error);
