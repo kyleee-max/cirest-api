@@ -53,9 +53,9 @@ export function EpCard({ ep, index, onClick }) {
         <div style={{
           display: 'flex', alignItems: 'center', gap: 6,
           background: hovered ? 'linear-gradient(135deg, #ffffff, #e2e8f0)' : 'linear-gradient(135deg, #e5e5e5, #ffffff)',
-          borderRadius: 8, padding: '6px 14px', fontSize: 12, fontWeight: 800, color: '#fff',
+          borderRadius: 8, padding: '6px 14px', fontSize: 12, fontWeight: 800, color: '#0d1117',
           fontFamily: 'JetBrains Mono, monospace', transition: 'background 0.2s',
-        }}><Icon name="Code2" size={12} /> {ep.method || 'GET'}</div>
+        }}><Icon name="Code2" size={12} color="#0d1117" /> {ep.method || 'GET'}</div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: ep.status === 'error' ? '#f87171' : '#10b981' }}>
           <div style={{ width: 8, height: 8, background: ep.status === 'error' ? '#f87171' : '#10b981', borderRadius: '50%', animation: ep.status === 'error' ? 'none' : 'blink 2s infinite' }} />
           {ep.status === 'error' ? 'Error' : 'Ready'}
@@ -217,7 +217,7 @@ export function EndpointModal({ ep, onClose }) {
 
         <div style={ms.modalFoot}>
           <button style={{ ...ms.sendBtn, ...(loading ? { opacity: 0.7, cursor: 'not-allowed' } : {}) }} onClick={sendRequest} disabled={loading}>
-            loading ? <><Icon name="RefreshCw" size={14} style={{ animation: 'spin 1s linear infinite' }} /> Processing...</> : <><Icon name="RefreshCw" size={14} /> Send Request</>
+            {loading ? <><Icon name="RefreshCw" size={14} style={{ animation: 'spin 1s linear infinite' }} /> Processing...</> : <><Icon name="RefreshCw" size={14} /> Send Request</>}
           </button>
         </div>
       </div>

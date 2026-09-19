@@ -61,9 +61,9 @@ function EpCard({ ep, index, onClick }) {
         <div style={{
           display: 'flex', alignItems: 'center', gap: 6,
           background: hovered ? 'linear-gradient(135deg, #ffffff, #e2e8f0)' : 'linear-gradient(135deg, #e5e5e5, #ffffff)',
-          borderRadius: 8, padding: '6px 14px', fontSize: 12, fontWeight: 800, color: '#fff',
+          borderRadius: 8, padding: '6px 14px', fontSize: 12, fontWeight: 800, color: '#0d1117',
           fontFamily: 'JetBrains Mono, monospace', transition: 'background 0.2s',
-        }}><Icon name="Code2" size={12} /> GET</div>
+        }}><Icon name="Code2" size={12} color="#0d1117" /> GET</div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: ep.status === 'error' ? '#f87171' : '#10b981' }}>
           <div style={{ width: 8, height: 8, background: ep.status === 'error' ? '#f87171' : '#10b981', borderRadius: '50%', animation: ep.status === 'error' ? 'none' : 'blink 2s infinite' }} />
           {ep.status === 'error' ? 'Error' : 'Ready'}
@@ -315,7 +315,7 @@ export default function Docs() {
 
             <div style={s.modalFoot}>
               <button style={{...s.sendBtn, ...(loading ? { opacity: 0.7, cursor: 'not-allowed' } : {})}} onClick={sendRequest} disabled={loading}>
-                loading ? <><Icon name="RefreshCw" size={14} style={{ animation: 'spin 1s linear infinite' }} /> Processing...</> : <><Icon name="RefreshCw" size={14} /> Send Request</>
+                {loading ? <><Icon name="RefreshCw" size={14} style={{ animation: 'spin 1s linear infinite' }} /> Processing...</> : <><Icon name="RefreshCw" size={14} /> Send Request</>}
               </button>
             </div>
           </div>
@@ -344,8 +344,8 @@ const s = {
   navSearch: { flex: 1, display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 22, padding: '9px 14px' },
   searchIcon: { color: '#ffffff', fontSize: 14, flexShrink: 0 },
   searchInput: { flex: 1, background: 'none', border: 'none', outline: 'none', color: '#f0f6fc', fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: 13 },
-  navNotif: { width: 34, height: 34, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, cursor: 'pointer', position: 'relative', flexShrink: 0 },
-  catLink: { width: 34, height: 34, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, cursor: 'pointer', flexShrink: 0 },
+  navNotif: { width: 34, height: 34, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, cursor: 'pointer', position: 'relative', flexShrink: 0, color: '#c8d3e0' },
+  catLink: { width: 34, height: 34, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, cursor: 'pointer', flexShrink: 0, color: '#c8d3e0' },
   notifDot: { position: 'absolute', top: 4, right: 4, width: 9, height: 9, background: '#f97316', borderRadius: '50%', border: '2px solid #0a0a0a' },
   main: { paddingTop: 56, background: '#0a0a0a', minHeight: '100vh', fontFamily: 'Plus Jakarta Sans, sans-serif', position: 'relative', zIndex: 1 },
   header: { padding: '28px 16px 0', textAlign: 'center', background: 'linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%)' },

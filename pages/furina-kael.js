@@ -67,7 +67,7 @@ function LoginPage({ onLogin }) {
           {err && <div style={{ color: '#f87171', fontSize: 12, marginTop: 8 }}>{err}</div>}
           <button onClick={submit} disabled={loading}
             style={{ width: '100%', marginTop: 16, padding: '13px', background: 'linear-gradient(135deg, #e5e5e5, #a3a3a3)', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 700, color: '#fff', cursor: 'pointer' }}>
-            loading ? 'Checking...' : <><Icon name="Lock" size={14} /> Login</>
+            {loading ? 'Checking...' : <><Icon name="Lock" size={14} /> Login</>}
           </button>
         </div>
       </div>
@@ -130,7 +130,7 @@ function EditorPanel({ file, onSaved }) {
           {toast && <span style={{ fontSize: 12, color: toast.ok ? '#4ade80' : '#f87171', display: 'inline-flex', alignItems: 'center', gap: 4 }}><Icon name={toast.ok ? 'Check' : 'XCircle'} size={13} /> {toast.msg}</span>}
           <button onClick={save} disabled={saving}
             style={{ padding: '7px 18px', background: 'linear-gradient(135deg, #e5e5e5, #a3a3a3)', border: 'none', borderRadius: 8, fontSize: 12, fontWeight: 700, color: '#fff', cursor: 'pointer' }}>
-            saving ? 'Saving...' : <><Icon name="Save" size={14} /> Save</>
+            {saving ? 'Saving...' : <><Icon name="Save" size={14} /> Save</>}
           </button>
         </div>
       </div>

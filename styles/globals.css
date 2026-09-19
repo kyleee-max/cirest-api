@@ -22,7 +22,7 @@ body {
 }
 
 a { text-decoration: none; color: inherit; }
-button { font-family: inherit; cursor: pointer; }
+button { font-family: inherit; cursor: pointer; color: inherit; }
 input, textarea { font-family: inherit; }
 
 * {
