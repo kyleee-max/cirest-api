@@ -115,7 +115,7 @@ export default function Home() {
             Powerful, scalable, dan developer-friendly REST API platform. Build aplikasi keren dengan puluhan endpoint siap pakai. Cukup pake apikey gratis, tanpa perlu daftar.
           </p>
           <div style={{ ...s.btnGroup, opacity: heroVisible ? 1 : 0, transform: heroVisible ? 'translateY(0)' : 'translateY(20px)', transition: 'all 0.5s ease 0.5s' }}>
-            <button style={{ ...s.btnMain, display: 'inline-flex', alignItems: 'center', gap: 8 }} onClick={() => router.push('/docs')}><Icon name="BookOpen" size={15} /> View Documentation</button>
+            <button style={{ ...s.btnMain, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }} onClick={() => router.push('/docs')}><Icon name="BookOpen" size={15} /> View Documentation</button>
           </div>
         </section>
 
