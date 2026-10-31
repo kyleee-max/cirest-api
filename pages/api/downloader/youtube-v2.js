@@ -1,111 +1,12 @@
-import { createDecipheriv } from 'crypto'
-
-const METADATA_DECRYPTION_KEY = Buffer.from(
-  'C5D58EF67A7584E4A29F6C35BBC4EB12',
-  'hex'
-)
-
-const HEADERS = {
-  'Content-Type': 'application/json',
-  'Origin': 'https://yt.savetube.me',
-  'User-Agent':
-    'Mozilla/5.0 (Linux; Android 15) AppleWebKit/537.36 Chrome/130 Mobile Safari/537.36',
-}
-
-async function savetube(url, { downloadType = 'audio', quality } = {}) {
-  const idMatch = url.match(
-    /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/))([a-zA-Z0-9_-]{11})/
-  )
-
-  if (!idMatch) throw new Error('URL YouTube tidak valid')
-
-  const videoId = idMatch[1]
-
-  const cdnRes = await fetch('https://media.savetube.vip/api/random-cdn', {
-    headers: HEADERS,
-  }).then(r => r.json()).catch(() => null)
-
-  if (!cdnRes?.cdn) throw new Error('CDN tidak tersedia')
-
-  const cdn = cdnRes.cdn
-
-  const info = await fetch(`https://${cdn}/v2/info`, {
-    method: 'POST',
-    headers: HEADERS,
-    body: JSON.stringify({
-      url: `https://www.youtube.com/watch?v=${videoId}`,
-    }),
-  }).then(r => r.json()).catch(() => null)
-
-  if (!info?.data) throw new Error('Metadata kosong')
-
-  let metadata
-
-  try {
-    const encrypted = Buffer.from(info.data, 'base64')
-
-    const decipher = createDecipheriv(
-      'aes-128-cbc',
-      METADATA_DECRYPTION_KEY,
-      encrypted.subarray(0, 16)
-    )
-
-    const decrypted = Buffer.concat([
-      decipher.update(encrypted.subarray(16)),
-      decipher.final(),
-    ])
-
-    metadata = JSON.parse(decrypted.toString('utf8'))
-  } catch {
-    throw new Error('Decrypt metadata gagal')
-  }
-
-  if (!metadata?.key) {
-    throw new Error('Key download tidak ditemukan')
-  }
-
-  const dl = await fetch(`https://${cdn}/download`, {
-    method: 'POST',
-    headers: HEADERS,
-    body: JSON.stringify({
-      id: videoId,
-      downloadType,
-      quality: quality || (downloadType === 'video' ? '360' : '128kbps'),
-      key: metadata.key,
-    }),
-  }).then(r => r.json()).catch(() => null)
-
-  if (!dl?.data?.downloadUrl) {
-    throw new Error(dl?.message || 'Download gagal')
-  }
-
-  return {
-    title: metadata.title,
-    duration: metadata.durationLabel,
-    thumbnail: metadata.thumbnail,
-    url: dl.data.downloadUrl,
-  }
-}
-
-async function savetubeRetry(url, opts, retry = 3) {
-  let lastErr
-
-  for (let i = 0; i < retry; i++) {
-    try {
-      return await savetube(url, opts)
-    } catch (err) {
-      lastErr = err
-
-      if (i < retry - 1) {
-        await new Promise(resolve => setTimeout(resolve, 1000))
-      }
-    }
-  }
-
-  throw lastErr
-}
+import { getVideoInfo, pickVideo, pickAudio, mapVideoDetails } from '../../../lib/ytdlp'
 
 // creator: KaelTzy
+
+function formatSize(bytes) {
+  const n = parseInt(bytes, 10)
+  if (!Number.isFinite(n) || n <= 0) return null
+  return `${(n / (1024 * 1024)).toFixed(2)} MB`
+}
 
 export default async function handler(req, res) {
   const {
@@ -130,18 +31,80 @@ export default async function handler(req, res) {
     })
   }
 
-  try {
-    const result = await savetubeRetry(url, {
-      downloadType: type,
-      quality,
+  if (!/^(https?:\/\/)?(www\.)?(youtube\.com\/(watch\?v=|shorts\/|embed\/|live\/)|youtu\.be\/)[\w-]{11}/.test(url)) {
+    return res.status(400).json({
+      success: false,
+      creator: 'KaelTzy',
+      message: 'URL YouTube tidak valid.',
     })
+  }
+
+  try {
+    const info = await getVideoInfo(url)
+    const formats = info.formats || []
+
+    let picked
+    let audioPair = null
+
+    if (type === 'video') {
+      picked = pickVideo(formats, quality)
+      // if picked is video-only, also give best audio for merge
+      if (picked && !(picked.acodec && picked.acodec !== 'none')) {
+        audioPair = pickAudio(formats)
+      }
+    } else {
+      picked = pickAudio(formats, quality)
+    }
+
+    if (!picked) {
+      return res.status(404).json({
+        success: false,
+        creator: 'KaelTzy',
+        message: `Format ${type} tidak ditemukan.`,
+      })
+    }
+
+    const details = mapVideoDetails(info)
 
     return res.status(200).json({
       success: true,
       creator: 'KaelTzy',
-      data: result,
+      data: {
+        id: details.id,
+        title: details.title,
+        duration: details.duration,
+        thumbnail: details.thumbnail,
+        uploader: details.uploader,
+        type,
+        format: {
+          itag: picked.format_id,
+          ext: picked.ext,
+          resolution: picked.resolution,
+          quality: picked.resolution || picked.format_note,
+          abr: picked.abr || null,
+          tbr: picked.tbr || null,
+          vcodec: picked.vcodec && picked.vcodec !== 'none' ? picked.vcodec : null,
+          acodec: picked.acodec && picked.acodec !== 'none' ? picked.acodec : null,
+          filesize: picked.filesize || picked.filesize_approx || null,
+          size: formatSize(picked.filesize || picked.filesize_approx),
+        },
+        url: picked.url,
+        // kalau video-only, sertakan audio pair buat merge
+        ...(audioPair
+          ? {
+              audioPair: {
+                itag: audioPair.format_id,
+                ext: audioPair.ext,
+                abr: audioPair.abr,
+                url: audioPair.url,
+              },
+              note: 'Format ini video-only. Download audioPair juga lalu merge: ffmpeg -i video -i audio -c copy out.mp4',
+            }
+          : {}),
+      },
     })
   } catch (err) {
+    console.error('YouTube DL v2:', err)
     return res.status(500).json({
       success: false,
       creator: 'KaelTzy',

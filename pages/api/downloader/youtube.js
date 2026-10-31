@@ -1,4 +1,4 @@
-import ytdl from '@distube/ytdl-core'
+import { getVideoInfo, splitFormats, mapVideoDetails } from '../../../lib/ytdlp'
 
 // creator: KaelTzy
 
@@ -6,52 +6,37 @@ export default async function handler(req, res) {
   const { url } = req.query
   if (!url) return res.status(400).json({ success: false, creator: 'KaelTzy', message: 'Parameter url wajib diisi.' })
 
-  if (!ytdl.validateURL(url)) {
+  if (!/^(https?:\/\/)?(www\.)?(youtube\.com\/(watch\?v=|shorts\/|embed\/|live\/)|youtu\.be\/)[\w-]{11}/.test(url)) {
     return res.status(400).json({ success: false, creator: 'KaelTzy', message: 'URL YouTube tidak valid.' })
   }
 
   try {
-    const info = await ytdl.getInfo(url)
-    const details = info.videoDetails
+    const info = await getVideoInfo(url)
+    const formats = splitFormats(info.formats || [])
 
-    const videoFormats = ytdl.filterFormats(info.formats, 'videoandaudio').map(f => ({
-      quality: f.qualityLabel,
-      mimeType: f.mimeType,
-      url: f.url,
-      contentLength: f.contentLength,
-    }))
-
-    const audioFormats = ytdl.filterFormats(info.formats, 'audioonly').map(f => ({
-      bitrate: f.audioBitrate,
-      mimeType: f.mimeType,
-      url: f.url,
-      contentLength: f.contentLength,
-    }))
+    // best merged pair (video-only + audio) for client-side merge
+    const bestVideo = formats.videoOnly[0] || null
+    const bestAudio = formats.audio[0] || null
 
     return res.status(200).json({
       success: true,
       creator: 'KaelTzy',
       data: {
-        id: details.videoId,
-        title: details.title,
-        description: details.shortDescription,
-        duration: details.lengthSeconds,
-        thumbnail: details.thumbnails?.at(-1)?.url,
-        author: {
-          name: details.author?.name,
-          channel: details.author?.channel_url,
-        },
-        stats: {
-          views: details.viewCount,
-          likes: details.likes,
-        },
+        ...mapVideoDetails(info),
         formats: {
-          video: videoFormats,
-          audio: audioFormats,
+          video: formats.video,
+          videoOnly: formats.videoOnly,
+          audio: formats.audio,
+        },
+        recommended: {
+          video: bestVideo,
+          audio: bestAudio,
+          note: 'Gabungkan video+audio pakai ffmpeg: ffmpeg -i video -i audio -c copy out.mp4',
         },
       },
     })
   } catch (err) {
+    console.error('YouTube DL:', err)
     return res.status(500).json({ success: false, creator: 'KaelTzy', message: 'Server error: ' + err.message })
   }
 }
