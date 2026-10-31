@@ -22,7 +22,7 @@ const endpoints = [
     category: 'Downloader',
     name: 'YouTube Downloader V2',
     status: 'ready',
-    desc: 'Download video atau audio YouTube melalui provider alternatif.',
+    desc: 'Download video atau audio YouTube. Powered by yt-dlp.',
     path: '/api/downloader/youtube-v2',
     method: 'GET',
     params: [
@@ -56,12 +56,24 @@ const endpoints = [
     category: 'Downloader',
     name: 'YouTube Downloader',
     status: 'ready',
-    desc: 'Download video YouTube berbagai kualitas + audio MP3. Powered by ytdl-core.',
+    desc: 'Info video YouTube + daftar semua format (video/audio). Powered by yt-dlp.',
     path: '/api/downloader/youtube',
     method: 'GET',
     params: [
       { key: 'url', desc: 'URL video YouTube', placeholder: 'https://youtu.be/xxx' }
     ],
+  },
+
+  // ─── UPLOADER ───
+  {
+    category: 'Uploader',
+    name: 'File Uploader',
+    status: 'ready',
+    desc: 'Upload file (multipart) atau reupload file remote ke CDN. Output: link CDN permanen.',
+    path: '/api/uploader',
+    method: 'POST',
+    params: [],
+    extra: 'POST multipart field "file" (image/video), atau GET ?url=<remote-url>',
   },
 
   // ─── HASTAG ───
@@ -95,6 +107,17 @@ const endpoints = [
     status: 'ready',
     desc: 'Hapus background foto secara otomatis dengan AI. Output PNG transparan. Powered by Pixelcut.',
     path: '/api/tools/removebg',
+    method: 'GET',
+    params: [
+      { key: 'url', desc: 'URL gambar yang mau dihapus backgroundnya', placeholder: 'https://example.com/photo.jpg' }
+    ],
+  },
+  {
+    category: 'Tools',
+    name: 'Remove Background V2',
+    status: 'ready',
+    desc: 'Hapus background foto via iLoveIMG. Output PNG transparan, limit 6MB. Powered by iLoveIMG.',
+    path: '/api/tools/removebg-v2',
     method: 'GET',
     params: [
       { key: 'url', desc: 'URL gambar yang mau dihapus backgroundnya', placeholder: 'https://example.com/photo.jpg' }
